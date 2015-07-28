@@ -1,0 +1,47 @@
+//16 columns
+#infiniteScrollList.a16columns {
+    .column {
+        width: (100% / 16);
+        .pod {
+            .border-radius(0px);
+            padding: 4px;
+            .id {
+                position: inherit;
+                top: 0;
+                right: 0;
+                padding: 0;
+                width: 100%;
+                .border-radius(0);
+            }
+            h3 {
+                display: none;
+            }
+            .desc {
+                font-size: 6px;
+            }
+        }   
+    }
+}
+
+@media (max-width: @widthTablet) {
+    #infiniteScrollList.a16columns {
+        .column {
+            width: (100% / 8);
+            &:nth-of-type(1n + 9) {
+                display: none;
+            }
+        }
+    }
+}
+
+@media (max-width: @widthMobile) {
+    #infiniteScrollList.a16columns {
+        .column {
+            width: (100% / 4);
+            &:nth-of-type(1n + 5) {
+                display: none;
+            }
+        }
+    }
+}
+

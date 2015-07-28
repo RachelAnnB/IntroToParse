@@ -1,0 +1,167 @@
+
+html {
+    background: @bgColor;
+}
+
+body {
+    width: 800px;
+    margin: 0 auto;
+    .font-default(14px);
+}
+
+.header {
+    .clearfix();
+
+    margin-top: 30px;
+    margin-bottom: 40px;
+
+    .titles {
+        float: left;
+        h1 {
+            margin: 0;
+        }
+        h3 {
+            margin: 0;
+        }
+    }
+
+    .btn-download {
+        margin-top: 5px;
+        float: right;
+    }
+}
+
+.menu {
+    ul {
+        margin: 0;
+        padding: 0 0 0px;
+        text-align: left;
+        li {
+            display: inline-block;
+            font-size: 18px;
+            a {
+                text-decoration: none;
+                color: darkslategrey;
+                .background-opacity(#34495E, .2);
+                display: block;
+                padding: 5px 10px;
+                margin: 0 3px 6px 0;
+            }
+            &:hover {
+                a {
+                    .background-opacity(#34495E, .5);
+                }
+            }
+            &.active {
+                a {
+                    color: white;
+                    background: #34495E;
+                }
+            }
+        }
+    }
+}
+
+.info {
+    clear: both;
+    margin: 10px 0px 0px;
+    padding: 10px 0; 
+    //    .border-radius(2px);
+    //    .background-opacity(gray, 0.4);
+    .links {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        float: right;
+        li {
+
+        }
+    }
+}
+ 
+//tablet
+@media (max-width: @widthTablet) {
+    body {
+        width: auto;
+        padding: 20px;
+    }
+
+    .header {
+
+        .titles {
+            h1 {
+            }
+            h3 {
+            }
+        }
+
+        .btn-download {
+        }
+    }
+
+    .menu {
+        ul {
+            margin: 0 0;
+            padding: 0 0;
+            text-align: left;
+            .clearfix();
+            li {
+                width: 50%;
+                float: left;
+                margin: 0;
+                padding: 0;
+                a {
+                }
+            }
+        }
+    }
+
+    .info {
+        clear: both;
+        margin: 15px 5px 0px;
+        text-align: center;
+        .links {
+            float: none;
+        }
+    }
+}
+
+//mobile
+@media (max-width: @widthMobile) {
+    body {
+        padding: 4px;
+    }
+
+    .header {
+
+        .titles {
+            float: none;
+            h1 {
+                text-align: center;
+            }
+            h3 {
+                text-align: center;
+            }
+        }
+
+        .btn-download {
+            margin-top: 20px;
+            text-align: center;
+            float: none;
+        }
+    }
+
+    .menu {
+        ul {
+            li {
+                width: auto;
+                display: block;
+                float: none;
+            }
+        }
+    }
+
+    .info {
+
+    }
+}
