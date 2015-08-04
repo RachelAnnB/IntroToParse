@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  
+  <title></title>
+  
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <style type="text/css">
+  
+    body {
+      font-family: "Helvetica", sans-serif;
+      font-weight: normal;
+    }
+    h2 {
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+    a {
+      text-decoration: none;
+    }
+    .hidden {
+      display: none;
+    }
+    #main {
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      border-radius: 3px;
+      border: 1px solid black;
+      box-shadow: inset 0 0 10px black;
+      font-size: 24px;
+    }
+    #input-wrapper{
+      padding-bottom: 15px;
+    }
+    #list-item-submit {
+      background: #61FF7E;
+      color: white;
+      box-shadow: none;
+      border-color: black;
+    }
+    li {
+      text-align: left;
+      font-family: sans-serif;
+      list-style: none;
+      padding: 10px 0;
+      border-bottom: 1px solid black;
+      margin-left: -10px;
+    }
+    li input {
+      margin-right: 15px;
+    }
+  
+  </style>
+  
+  <script type="text/javascript" src="http://www.parsecdn.com/ja/parse-1.2.17.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  
+</head>
+
+<body>
+  
+  <div id="main">
+    
+     <div id="input-wrapper">
+      <input type="text" id="list-input" placeholder="Enter a Note Here" />
+      <input type="button" id="list-item-submit" value="Add" />
+    </div>
+    
+    <div>
+      <h1>Incomplete Task</h1>
+      <ul id="incomplete-items">
+        <li id="no-incomplete-message">There is no Incomplete Task, try adding one above.</li>
+      </ul>  
+    </div>
+    
+  </div>
+  
+  <script type="text/javascript">
+  
+    Parse.initialize("P7bNBlVLxTBsXMqTHnQJ4BzqBZt72JChn58Jfzal", "pN6bkby0OUNFpAXGFVm1Ls57UA4gKFAMHTTOR7y8");
+  
+  </script>
+  
+</body>
+</html>
