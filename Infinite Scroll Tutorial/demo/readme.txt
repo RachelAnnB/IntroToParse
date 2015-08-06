@@ -1,1 +1,0 @@
-Visit http://demoinfinite.appspot.com/ for live demos.

@@ -32,11 +32,19 @@
 
         <div class="col-sm-8 blog-main">
           <div class="main-container">
-            <div class="blog-post">
-              <h2 class="blog-post-title"><a href="#">{{title}}</a></h2>
-              <p class="blog-post-meta">At time by an author</p>
-              <div>{{{content}}}</div>
-            </div>
+          <script id="login-tpl" type="text/x-handlebars-template">
+            <form class="form-signin" role="form">
+              <h2 class="form-signin-heading">Please sign in</h2>
+              <input type="text" name="username" class="form-control" placeholder="Username" required="" autofocus="">
+              <input type="password" name="password" class="form-control" placeholder="Password" required="">
+              <button class="btn btn-lg btn-primary btn-block" type="sumbit">Sign in</button>
+            </form>
+          </script>
+          
+          <script id="welcome-tpl" type="text/x-handlebars-template">
+            <h2>Welcome, {{username}}!</h2>
+            </script>
+          </div>
           </div>
           
           <nav>
