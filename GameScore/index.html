@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Gamescore</title>
+
+    <!--Links to CSS Stylesheets-->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!--Links to Javascript files-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.1/backbone-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.4.2/backbone.marionette.min.js"></script>
+    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.5.0.min.js"></script>
+
+  </head>
+  <body>
+
+    <div class="container">
+      <h1>Gamescore Test Application</h1>
+
+      <div class="gamescoreContainer">
+        <div class="row">
+          <div class="span2">
+            <form action="#" class="horizontalForm" id="scoreForm">
+              <h2>Submit New Object</h2>
+              <div class="gamescoreInfo">
+                <label for="username">Username</label>
+                <input type="text" class="gamescoreInput" title="gamescore[username]" id="gamescore-username">
+              </div>
+
+              <div class="gamescoreInfo">
+                <label for="score">Score</label>
+                <input type="number" class="gamescoreInput" title="gamescore[score]" id="gamescore-score">
+              </div>
+              <br>
+              <input type="button" onclick="submitValues()" class="submitBtn" value="Submit" id="submit"/>
+              <br><br>
+
+              <hr>
+
+              <h2>Pull A Single Existing Object</h2>
+              <div class="gamescoreInfo">
+                <label for="objectID">Single Object ID</label>
+                <input type="text" class="gamescoreInput" title="gamescore[objectID]" id="gamescore-objectID">
+              </div>
+              <br>
+              <input type="button" onclick="singleResultValues()" class="singleResultBtn" value="Single Result" id="singleResult"/>
+              <br><br><br>
+
+              <div id="objectIDResults"></div>
+              <div id="userNameResults"></div>
+              <div id="scoreResults"></div> 
+              <br>
+
+              <hr>
+
+              <h2>Pulling Multiple Existing Objects</h2>
+              <input type="button" onclick="multipleResultsValues()" class="multipleResultsBtn" value="Multiple Results" id="multipleResults"/>
+              <br><br><br>
+              
+              <div>
+                <ul id="multipleObjectsResults">
+                  
+                </ul>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <script type="text/javascript">
+      Parse.initialize("XfQ2RSF5dxzBHfAkVFJeWbht27DsZP2oWPuLZFsj", "LH1z92IwTYPqzvbRoZnuABxLJ0jHukGNG2yXm3TT");
+
+      //Simple syntax to create a new subclass of Parse.Object.
+      var GameScore = Parse.Object.extend("GameScore");
+
+      //Create a new instance of that class.
+      var gameScore = new GameScore();
+
+      var usernameInputField=document.getElementById("gamescore-username");
+      var scoreInputField=document.getElementById("gamescore-score");
+
+      function submitValues() {
+        var scoreAsInt = parseInt(scoreInputField.value, 10);
+        gameScore.set("score", scoreAsInt);
+        gameScore.set("userName", usernameInputField.value);
+        scoreInputField.value="";
+        usernameInputField.value="";
+
+        gameScore.save(null, {
+          success: function(gameScore) {
+            //Execute any logic that should take place after the object is saved
+            alert('New object created with objectId: ' + gameScore.id);
+          },
+
+          error: function(gameScore, error) {
+            //Execute any logic that should take place if the save fails
+            //Error is a Parse.Error with an error code and message
+            alert('Failed to create a new object, with error code: ' + error.message);
+          }
+        });
+      }
+
+      //This function displays multiple Parse Object userNames and their scores
+      function multipleResultsValues() {
+        console.log("we are starting to pull multiple objects");
+        
+        var multipleObjectsResultsList = document.getElementById("multipleObjectsResults");
+        var multipleObjectsQuery = new Parse.Query(GameScore);
+        multipleObjectsQuery.exists("userName")
+          .limit(10)
+          .descending("score");
+        multipleObjectsQuery.find({
+          success: function(results) {
+            alert("Successfully retrieved " + results.length + " scores.");
+            multipleObjectsResultsList.innerHTML="Make sure to allow pop-ups to see results";
+
+            // Do something with the returned Parse.Object values
+            for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+              alert(object.id + ' - ' + object.get('userName') + " " + object.get('score'));              
+            }
+          },
+          error: function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+      }
+
+      //This function displays a single userName and score Parse Object
+      function singleResultValues() {
+
+        console.log("results button pressed");
+        //Here we are linking this variable to the input field with id: gamescore-objectID
+        var objectIDInputField = document.getElementById("gamescore-objectID");
+        var singleObjectQuery = new Parse.Query(GameScore);
+        //Here we are using the input field value as an objectId that we want to query
+        singleObjectQuery.get(objectIDInputField.value, {
+
+          success: function(gameScore) {
+            console.log("it worked!!");
+            //The Parse query was successful in returning a Parse object and now we want to pull data from that object
+            //These variables are calling the Parse columns inside the Parse.Object from inside the query
+            var score = gameScore.get("score");
+            var userName = gameScore.get("userName");
+            var objectID = gameScore.id;
+
+            console.log ("score: " + userName + " - " + score);
+            //This variable links the html div called queryResults
+            var objectIDResultsDiv = document.getElementById("objectIDResults");  
+            var userNameResultsDiv = document.getElementById("userNameResults");
+            var scoreResultsDiv = document.getElementById("scoreResults");
+
+            //We are displaying the html of resultsDiv to say the userName and score inside the queryResults div tag
+            objectIDResultsDiv.innerHTML = "Object ID: " + objectID;
+            userNameResultsDiv.innerHTML = "Username: " + userName;
+            scoreResultsDiv.innerHTML = "Score: " + score;
+
+            // The object was retrieved successfully.
+            objectIDInputField.value = "";
+          },
+
+          error: function(object, error) {
+            // The object was not retrieved successfully.
+            // error is a Parse.Error with an error code and message.
+            console.log("Object ID not found.");
+            alert("Object ID not found!");
+          }
+        });      
+      }
+
+    </script>
+
+    <!--Sources for Javascript files-->
+    <script src="js/lib/jquery-2.1.4.min.js"></script>
+    <script src="js/lib/underscore.js"></script>
+    <script src="js/lib/backbone.js"></script>
+
+  </body>
+</html>
+
