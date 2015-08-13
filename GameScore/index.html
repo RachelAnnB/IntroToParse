@@ -22,6 +22,7 @@
 
     <div class="container">
       <h1>Gamescore Test Application</h1>
+      <hr id="h1hr">
 
       <div class="gamescoreContainer">
         <div class="row">
@@ -38,9 +39,29 @@
                 <input type="number" class="gamescoreInput" title="gamescore[score]" id="gamescore-score">
               </div>
               <br>
+              <form id="fileUpload" class="fileUpload" enctype="multipart/form-data" method="post">
+                <input type="file" class="imageFile" id="imageFile" accept="image/*">
+              </form>
+              <br><br>
               <input type="button" onclick="submitValues()" class="submitBtn" value="Submit" id="submit"/>
               <br><br>
 
+              <hr>
+              
+              <h2>Update Existing Object</h2>
+              <div class="gamescoreInfo">
+                <label for="currentUser">Object ID</label>
+                <input type="text" class="gamescoreInput" title="gamescore[currentUser]" id="gamescore-current-user">
+              </div>
+
+              <div class="gamescoreInfo">
+                <label for="scoreNew">New Score</label>
+                <input type="number" class="gamescoreInput" title="gamescore[scoreNew]" id="gamescore-score-new">
+              </div>
+              <br>
+              <input type="button" onclick="updateExistingValues()" class="updateBtn" value="Update" id="update"/>
+              <br><br>
+              
               <hr>
 
               <h2>Pull A Single Existing Object</h2>
@@ -52,28 +73,32 @@
               <input type="button" onclick="singleResultValues()" class="singleResultBtn" value="Single Result" id="singleResult"/>
               <br><br><br>
 
+            <div id="resultsContainer">
+              <br>
               <div id="objectIDResults"></div>
               <div id="userNameResults"></div>
-              <div id="scoreResults"></div> 
+              <div id="scoreResults"></div>
+              <br>
+            </div>
               <br>
 
               <hr>
 
               <h2>Pulling Multiple Existing Objects</h2>
+              <br>
               <input type="button" onclick="multipleResultsValues()" class="multipleResultsBtn" value="Multiple Results" id="multipleResults"/>
-              <br><br><br>
-              
+              <br><br>
+
               <div>
                 <ul id="multipleObjectsResults">
-                  
+                  <p>Make sure to allow pop-ups, to view the top 10 scores!</p> 
                 </ul>
               </div>
             </form>
           </div>
         </div>
       </div>
-
-
+      
     </div>
 
     <script type="text/javascript">
@@ -85,15 +110,27 @@
       //Create a new instance of that class.
       var gameScore = new GameScore();
 
-      var usernameInputField=document.getElementById("gamescore-username");
-      var scoreInputField=document.getElementById("gamescore-score");
-
+      var usernameInputField = document.getElementById("gamescore-username");
+      var scoreInputField = document.getElementById("gamescore-score");
+      var newScoreInputField = document.getElementById("gamescore-score-new");
+      
+      var base64 = "V29ya2luZyBhdCBQYXJzZSBpcyBncmVhdCE=";
+      var file = document.getElementById("imageFile");
+      var name = document.getElementById("gamescore-username");
+      $('#imageFile').bind("change", function (e) {
+          var files = e.target.files || e.dataTransfer.files;
+          // Our file var now holds the selected file
+          file = files[0];
+          name = file.name;
+      });
+      
+      //--------------------------------------------------------------------------------
+      //This function submits the values from our three inputs: Username & Score & Image
+      //--------------------------------------------------------------------------------
       function submitValues() {
         var scoreAsInt = parseInt(scoreInputField.value, 10);
         gameScore.set("score", scoreAsInt);
         gameScore.set("userName", usernameInputField.value);
-        scoreInputField.value="";
-        usernameInputField.value="";
 
         gameScore.save(null, {
           success: function(gameScore) {
@@ -107,9 +144,81 @@
             alert('Failed to create a new object, with error code: ' + error.message);
           }
         });
-      }
+        
+        //-------------------------------------------------------
+        //Below is all the code for uploading the images to Parse
+        //-------------------------------------------------------
+        if (file != null) {
+          var serverUrl = 'https://api.parse.com/1/files/' + file.name;
 
+          $.ajax({
+              type: "POST",
+              beforeSend: function (request) {
+                  request.setRequestHeader("X-Parse-Application-Id", 'XfQ2RSF5dxzBHfAkVFJeWbht27DsZP2oWPuLZFsj');
+                  request.setRequestHeader("X-Parse-REST-API-Key", 'rxPxZQ3Nz5HzIM9SGmA1iI5khSAKuINsHa7JsX8m');
+                  request.setRequestHeader("Content-Type", file.png);
+              },
+              url: serverUrl,
+              data: file,
+              processData: false,
+              contentType: false,
+              success: function (data) {
+                var myimage = new Parse.Object("imageTable"); //create new object
+                myimage.set({base64: base64}); //set the url that will be used to retrieve the image
+                myimage.set({imagefile: {"name": data.name,"url": base64,"__type": "File"}}); //save it's name and url in a json object for good measure
+                myimage.save(); //save and push the changes
+                imageFile.value = "";        
+                scoreInputField.value="";
+                usernameInputField.value="";
+                
+                console.log("Your image was saved!");
+                alert("Your image has been saved!!");
+              },
+            
+              error: function (data) {
+                  var obj = jQuery.parseJSON(data);
+                  alert(obj.error);
+              }
+          });
+        }
+        
+      }
+      
+      //----------------------------------------------------------------
+      //This function updates the values from our one input field: Score
+      //----------------------------------------------------------------
+      function updateExistingValues() {
+        var newScoreAsInt = parseInt(newScoreInputField.value, 10);
+          gameScore.set("score", newScoreAsInt);
+        
+        //Here we are linking this variable to the input field with id: gamescore-current-user
+        var currentUserInputField = document.getElementById("gamescore-current-user");
+        var objectIDQuery = new Parse.Query(GameScore);
+        objectIDQuery.get(currentUserInputField.value, {
+          
+            success: function(gameScore) {
+              var objectID = gameScore.id;
+              console.log("Your new score for Object ID: " + objectID + " is " + newScoreAsInt + ".");
+              //Now let's update the data, in this case only the score, the username won't change
+              gameScore.set("score", newScoreAsInt);
+              gameScore.save();
+              alert('You updated your score!');
+              
+              // The object was retrieved successfully, so the input fields are cleared.
+              currentUserInputField.value = "";
+              newScoreInputField.value = "";              
+            },
+
+            error: function(gameScore, error) {
+              //Error is a Parse.Error with an error code and message
+              alert('Failed to update your score, with error code: ' + error.message);
+            }
+        });
+      }
+      
+      //-----------------------------------------------------------------------
       //This function displays multiple Parse Object userNames and their scores
+      //-----------------------------------------------------------------------
       function multipleResultsValues() {
         console.log("we are starting to pull multiple objects");
         
@@ -120,13 +229,12 @@
           .descending("score");
         multipleObjectsQuery.find({
           success: function(results) {
-            alert("Successfully retrieved " + results.length + " scores.");
-            multipleObjectsResultsList.innerHTML="Make sure to allow pop-ups to see results";
+            alert("Successfully retrieved " + results.length + " scores!");
 
             // Do something with the returned Parse.Object values
             for (var i = 0; i < results.length; i++) {
               var object = results[i];
-              alert(object.id + ' - ' + object.get('userName') + " " + object.get('score'));              
+              alert(object.id + '  -  ' + "The Username " + object.get('userName') + " recieved a score of: " + object.get('score') + "!!" );
             }
           },
           error: function(error) {
@@ -135,7 +243,9 @@
         });
       }
 
+      //---------------------------------------------------------------
       //This function displays a single userName and score Parse Object
+      //---------------------------------------------------------------
       function singleResultValues() {
 
         console.log("results button pressed");
@@ -154,15 +264,15 @@
             var objectID = gameScore.id;
 
             console.log ("score: " + userName + " - " + score);
-            //This variable links the html div called queryResults
+            //These variables link the individual html divs
             var objectIDResultsDiv = document.getElementById("objectIDResults");  
             var userNameResultsDiv = document.getElementById("userNameResults");
             var scoreResultsDiv = document.getElementById("scoreResults");
 
-            //We are displaying the html of resultsDiv to say the userName and score inside the queryResults div tag
-            objectIDResultsDiv.innerHTML = "Object ID: " + objectID;
-            userNameResultsDiv.innerHTML = "Username: " + userName;
-            scoreResultsDiv.innerHTML = "Score: " + score;
+            //We are displaying the html of individual divs to say the userName & score inside the individual div tags
+            objectIDResultsDiv.innerHTML = "<b>Object ID: </b>" + objectID;
+            userNameResultsDiv.innerHTML = "<b>Username: </b>" + userName;
+            scoreResultsDiv.innerHTML = "<b>Score: </b>" + score;
 
             // The object was retrieved successfully.
             objectIDInputField.value = "";
@@ -174,9 +284,9 @@
             console.log("Object ID not found.");
             alert("Object ID not found!");
           }
-        });      
+        });
       }
-
+      
     </script>
 
     <!--Sources for Javascript files-->
@@ -186,4 +296,3 @@
 
   </body>
 </html>
-
