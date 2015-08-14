@@ -117,7 +117,7 @@ $(function() {
     },
     
     //Hitting enter, finalizes the edit
-    updateOnEnter: function() {
+    updateOnEnter: function(e) {
       if (e.keyCode == 13) this.close();
     },
     
@@ -130,6 +130,7 @@ $(function() {
   //Application View
   var ManageTodosView = Parse.View.extend({
     statsTemplate: _.template($('#stats-template').html()),
+    
     events: {
       "keypress #new-todo" : "createOnEnter",
       "click #clear-completed" : "clearCompleted",
@@ -244,7 +245,7 @@ $(function() {
     //If you hit enter, created a new Todo model
     createOnEnter: function(e) {
       var self = this;
-      if (e.keyCode !=13) return;
+      if (e.keyCode != 13) return;
       
       this.todos.create({
         content: this.input.val(),
@@ -273,7 +274,7 @@ $(function() {
   //LogIn View
   var LogInView = Parse.View.extend({
     events: {
-      "sumbit form.login-form" : "logIn",
+      "submit form.login-form" : "logIn",
       "submit form.signup-form" : "signUp"
     },
     
@@ -295,11 +296,15 @@ $(function() {
           new ManageTodosView();
           self.undelegateEvents();
           delete self;
+          
+          alert("Congrats! You have logged in successfully!");
         },
         
         error: function(user, error) {
           self.$(".login-form .error").html("Invalid username or password. Please try again.").show();
-          this.$(".login-form button").removeAttr("disabled");
+          self.$(".login-form button").removeAttr("disabled");
+          
+          alert("Invalid Username or Password. Please try again.");
         }
       });
       
@@ -319,16 +324,20 @@ $(function() {
           new ManageTodosView();
           self.undelegateEvents();
           delete self;
+          
+          alert("Congrats! You have successfully signed up!");
         },
         
         error: function(user, error) {
-          self.$(".signup-form .error").html(error.message).show();
-          this.$(".signup-form button").html("disabled");
+          self.$(".signup-form .error").html(_.escape(error.message)).show();
+          self.$(".signup-form button").removeAttr("disabled");
+          
+          alert("Please enter a valid Username and Password.");
         }
       });
       
       this.$(".signup-form button").attr("disabled", "disabled");
-      return this;
+      return false;
     },
     
     render: function() {
