@@ -4,11 +4,6 @@ $(function() {
   //Initialize Parse with my App & JS keys
   Parse.initialize("jRUEinSI1QYVOLrPPCkUpAiKAe8wQ6PvrveXhr2l", "97mBYxGauI7CApIOv94ZipLmTkhm73qYkmbZrPge");
   
-  //--------------
-  //Facebook Login
-  //--------------
-  
-  
   //------
   //Models
   //------
@@ -178,7 +173,8 @@ $(function() {
     //Logs out the user and shows the login view
     logOut: function(e) {
       Parse.User.logOut();
-      window.location.reload(true);
+      window.open("http://www.rachelbroering.com/todo-fb-login/index.html", "_self");
+      alert('Back to the index.html');
       this.undelegateEvents();
       delete this;
     },
