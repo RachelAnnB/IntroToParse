@@ -16,7 +16,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.1/backbone-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.4.2/backbone.marionette.min.js"></script>
     <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.5.0.min.js"></script>
-    <script src="//connect.facebook.net/en_US/all.js"></script>
 
   </head>
   <body>
@@ -48,7 +47,7 @@
             logging : true,
             version : 'v2.4'
           });
-
+          
         };
 
         //Load the SDK asynchronously
@@ -71,7 +70,7 @@
               }
 
               window.open("http://www.rachelbroering.com/todo-fb-login/todo.html", "_self");
-              alert('We are moving to the todo.html page');
+              console.log('We are moving to the todo.html page');
             },
 
             error: function(user, error) {
@@ -81,6 +80,7 @@
           });
         }
         
+
       </script>
 
       <!--Facebook Login-->
@@ -93,8 +93,6 @@
           <button class="fbLogin" id="loginBtn" onclick="fLogin();"><img src="/images/loginBtn.png"></button>
           <br>       
         </div>
-
-        <h3>**Must manually log out of Facebook before a new user can log into the Application.**</h3>
 
       </div>
 
