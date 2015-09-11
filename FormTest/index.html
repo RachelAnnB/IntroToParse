@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
 
-    <title>Login Test</title>
+    <title>Form Test</title>
 
     <!--Links to CSS Stylesheets-->
     <link rel="stylesheet" href="css/main.css" media="all" type="text/css">
@@ -49,10 +49,17 @@
               if (!user.existed()) {
                 alert("User logged into Facebook and created a new Parse session!");
                 console.log('New Parse Session created.');
+
+                //Displays the name of the current user
+                $("#currentUser").html("<b>Current User: </b>" + Parse.User.current().get('username'));
               }
               else {
                 alert("User has logged into this Application!");
+
+                //Displays the name of the current user
+                $("#currentUser").html("<b>Current User: </b>" + Parse.User.current().get('username'));
               }
+
             },
 
             error: function(user, error) {
@@ -100,13 +107,7 @@
         js.src = "//connect.facebook.net/en_US/all/debug.js";
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
-
-      //This is the function for showing the form
-      function showForm() {
-        div = document.getElementById("form");
-        div.style.display = "block";
-      }
-
+      
     </script>
 
     <div class="container">
@@ -120,13 +121,15 @@
         <br><br><br>
       </div>
 
-      <div id="form" style="display:block;">
+      <div id="form" style="display: none;">
 
         <h1>Form Test</h1>
 
+        <br><div id="currentUser"></div><br>
+
         <div id="FormBox">
           <h3>Name</h3>
-          <input type="text" id="nameInput" class="formInput" title="form[name]">
+          <input type="text" id="nameInput" class="formInput" title="form[name]" autofocus>
 
           <h3>Address</h3>
           <input type="text" id="addressInput" class="formInput" title="form[address]">
@@ -141,50 +144,33 @@
           <input type="file" id="imageInput" class="formInput" title="form[image]">
 
           <br><br><br>
-          <button id="submitBtn" class="submitBtn" onclick="submitValues(); imageUpload();">Submit</button>
+          <button id="submitBtn" class="submitBtn" onclick="submitValues();">Submit</button>
         </div>
         <br><br>
-        
-        
-        
-        
-        <!--This is where the retrieved images from Parse should appear-->
-        <div id="infoViewTest">
-          
-        </div>
-        <br><br>
-        
-        
-        
-        
-        <!--Template for recently added Forms-->
-        <div id="recentForms">
-          <script type="text/template" id="recentFormTemplate">
-            <ul id="form-list">
-            </ul>
-          </script>
-        </div>
 
-        <!--Template for the Form View-->
-        <div id="FormBoxView">
-          <script type="text/template" id="formViewTemplate">
-        <div id="singleFormView">
-          <div id="profilePicView">
-            <a href="<%= photo_url %>"><img id="profilePic" src="<%= photo_image_url %>"/></a>
-            </div>
+        <!--This is where the retrieved objects from Parse should appear-->
+        <div id="infoView" style="display: none">
 
-          <div id="inputInfoView">
-            <li id="nameView"><%= display_name %></li>
-            <hr>
-            <li id="addressView"><%= display_address %></li>
-            <li id="phoneView"><%= display_phone %></li>
-            <li id="emailView"><%= display_email %></li>
-            <hr>
-            </div>
-            </div>
+          <ul id="list-forms">
+
+          </ul>
+
+        </div>
         <br><br><br>
-          </script>
+
+        <!--You should see this content, after clicking 1 of the links-->
+        <div id="formLinkInfo" data-id="" style="display: none">
+          <input id="formLinkId" type="hidden" value="">
+          <img class="picView" id="formLinkImage" alt="profilePic" src="">
+          <!--<h4 id="formLinkUser"></h4>-->
+          <h2 id="formLinkName"></h2>
+          <hr>
+          <p id="formLinkAddress"></p>
+          <p id="formLinkPhone"></p>
+          <p id="formLinkEmail"></p>
         </div>
+        <br><br>
+
       </div>
 
     </div>

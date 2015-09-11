@@ -16,13 +16,30 @@ h1 {
   letter-spacing: 1px;
 }
 
+h2 {
+  font-family: Bebas Neue;
+  font-size: 30px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+#currentUser {
+  font-family: Helvetica;
+  font-size: 12px;
+  text-align: center;
+  width: 40%;
+  margin: 0 auto;
+}
+
+h4 {
+  font-family: Helvetica;
+  font-size: 12px;
+  text-align: center;
+}
+
 #fb-root {
   margin-left: 47%;
   width: 6%;
-}
-
-#testBtn {
-  margin-left: 47%;
 }
 
 p {
@@ -58,34 +75,53 @@ h3 {
   background-color: lightgray;
 }
 
-#singleFormView {
-  width: 90%;
+#formLinkInfo {
+  width: 80%;
   margin: 0 auto;
-  margin-left: 5%;
-  display: inline-block;
-  border: 1px solid black;
+  padding: 5px;
 }
 
-#profilePicView {
+.picView {
   width: 200px;
   height: 200px;
-  padding: 10px;
   float: left;
 }
 
-#profilePic {
+#formLinkImage {
   max-height: 100%;
   max-width: 100%;
 }
 
-#inputInfoView {
-  margin-left: 15%;
-  margin-top: 3%;
-  float: left;
-  width: 60%;
+ul {
   list-style-type: none;
-  text-align: left;
-  font-family: Helvetica;
-  font-size: 18px;
-  line-height: 28px;
+  margin: 0 auto;
+}
+
+li {
+  border: 1px solid black;
+  margin: 0 auto;
+  margin-bottom: 15px;
+}
+
+#infoView {
+  width: 50%;
+  margin: 0 auto;
+  background-color: aliceblue;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  color: gray;
+}
+
+a:visited {
+  color: black;
+}
+
+hr {
+  width: 40%;
 }
